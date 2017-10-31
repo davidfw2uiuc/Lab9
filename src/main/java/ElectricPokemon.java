@@ -59,6 +59,27 @@ public class ElectricPokemon extends Pokemon {
      * Implement this.
      */
     public boolean attack(final Pokemon opponent) {
+        super.attack(opponent);
+        if (opponent.getHitPoints() < 1) {
+            //opponent fainted before specialty attack
+            return true;
+        }
+
+        if (opponent.pokeType == this.pokeType) {
+            //same type, will not execute specialty attack
+            return false;
+        }
+
+        boolean execute = Math.random() < specialtyProbability;
+
+        if (execute) {
+            opponent.setHitPoints(0);
+            System.out.printf("%s executes a specialty attack... %s!!!\n",
+                    this.getName(), this.specialtyAttack);
+            System.out.printf("%s has been defeated!", opponent.getName());
+            return true;
+        }
+
         return false;
     }
 

@@ -4,10 +4,10 @@ import java.util.Scanner;
  * Class that implements a Pokemon colosseum.
  * <p>
  * Our Pokemon console game was a big hit and #1 top app on a fictional website! In order to meet
- * the demands, we have to make our console game even better. We're launching Pokemon 2.0
- * and introducing new features, such as different types of Pokemon with special abilities.
- * The Colosseum class is where all the battles will go down.
- * We will build our Pokemon, let them battle, and see who will be the winner!
+ * the demands, we have to make our console game even better. We're launching Pokemon 2.0 and
+ * introducing new features, such as different types of Pokemon with special abilities. The
+ * Colosseum class is where all the battles will go down. We will build our Pokemon, let them
+ * battle, and see who will be the winner!
  *
  * @see <a href="https://cs125.cs.illinois.edu/lab/9/">Lab 9 Description</a>
  */
@@ -16,6 +16,11 @@ public class Colosseum {
      * The maximum number of hit points we will allow a Pokemon to start with.
      */
     static final int MAX_HIT_POINTS = 50;
+
+    /**
+     * Maximum attack/defense level.
+     */
+    static final int SUM_ATTACK_DEFENSE = 50;
 
     /**
      * The maximum number of rounds we will let the Pokemon battle.
@@ -40,11 +45,9 @@ public class Colosseum {
 
     /**
      * We are now reimplementing this to meet our new Pokemon specifications. <br>
-     * The process will still be the same for getting the information from the user,
-     * but now we are adding the feature where the user can pick what TYPE of
-     * Pokemon we are going to battle.
-     *
-     * How we will build our Pokemon to battle.
+     * The process will still be the same for getting the information from the user, but now we are
+     * adding the feature where the user can pick what TYPE of Pokemon we are going to battle. How
+     * we will build our Pokemon to battle.
      * <p>
      * Have the user select from a list of 3 different types of Pokemon.
      * <p>
@@ -53,7 +56,7 @@ public class Colosseum {
      * Requirements we should check the user for: <br>
      * - The type of Pokemon is 1 of the 3 choices <br>
      * - Hit points are between 1 and MAX_HIT_POINTS <br>
-     * - No more than 50 points are split between attack level and defense leve <br>
+     * - No more than 50 points are split between attack level and defense level <br>
      * - Attack level and defense level must have at least 1 point each <br>
      * Example of how this will look to the user:
      * <p>
@@ -103,8 +106,77 @@ public class Colosseum {
      *         <p>
      */
     public static Pokemon buildPokemon() {
-        Pokemon returnPokemon = null;
-        return returnPokemon;
+        Pokemon tempPokemon = new Pokemon();
+        boolean pokeTypeSelected = false;
+        int pokeTypeInt = 0;
+        final int electricType = 1;
+        final int fireType = 2;
+        final int waterType = 3;
+        boolean hitPointsSelected = false;
+        boolean attackPointsSelected = false;
+        boolean defensePointsSelected = false;
+        myScan = new Scanner(System.in);
+
+        while (!pokeTypeSelected) {
+            System.out.println("Select from the following Pokemon types:");
+            System.out.println("1 - Electric Pokemon");
+            System.out.println("2 - Fire Pokemon");
+            System.out.println("3 - Water Pokemon");
+            pokeTypeInt = myScan.nextInt();
+            pokeTypeSelected = true;
+            switch (pokeTypeInt) {
+                case electricType:
+                    tempPokemon = new ElectricPokemon(); //.pokeType = Pokemon.PokemonType.ELECTRIC;
+                    break;
+                case fireType:
+                    tempPokemon = new FirePokemon();
+                    break;
+                case waterType:
+                    tempPokemon = new WaterPokemon();
+                    break;
+                default:
+                    pokeTypeSelected = false;
+                    break;
+            }
+        }
+
+        System.out.print("Please name your Pokemon: ");
+        tempPokemon.setName(myScan.next());
+
+        System.out.println("How many hit points will it have? (1-50):");
+        while (!hitPointsSelected) {
+            tempPokemon.setHitPoints(myScan.nextInt());
+            if (tempPokemon.getHitPoints() > MAX_HIT_POINTS || tempPokemon.getHitPoints() < 1) {
+                System.out.println("Sorry. Hit points must be between 1 and 50: ");
+            } else {
+                hitPointsSelected = true;
+            }
+        }
+
+        System.out.println("Split fifty points between attack leven and defense level");
+        System.out.println("Enter your attack level (1-49): ");
+        while (!attackPointsSelected) {
+            tempPokemon.setAttackLevel(myScan.nextInt());
+            if (tempPokemon.getAttackLevel() > SUM_ATTACK_DEFENSE - 1
+                    || tempPokemon.getAttackLevel() < 1) {
+                System.out.println("Sorry. The attack level must be between 1 and 49: ");
+            } else {
+                attackPointsSelected = true;
+            }
+        }
+        System.out.printf("Enter your defense level "
+                + "(1-%d): \n", MAX_HIT_POINTS - tempPokemon.getAttackLevel());
+        while (!defensePointsSelected) {
+            tempPokemon.setDefenseLevel(myScan.nextInt());
+            if (tempPokemon.getDefenseLevel() > SUM_ATTACK_DEFENSE - tempPokemon.getAttackLevel()
+                    || tempPokemon.getDefenseLevel() < 1) {
+                System.out.printf("Sorry. The attack level must be "
+                        + "between 1 and %d: ", SUM_ATTACK_DEFENSE - tempPokemon.getAttackLevel());
+            } else {
+                defensePointsSelected = true;
+            }
+        }
+        return tempPokemon;
     }
 
     /**
@@ -191,15 +263,16 @@ public class Colosseum {
         }
     }
     /**
-     * Just a simple menu printer for the types of Pokemon
-     * so we don't clutter other functions printing it over and over. <p>
+     * Just a simple menu printer for the types of Pokemon so we don't clutter other functions
+     * printing it over and over.
+     * <p>
      * You do not need to modify this function.
      */
     public static void printTypeMenu() {
-       System.out.println("Select from the following Pokemon types: ");
-       System.out.println("1 - Electric Pokemon ");
-       System.out.println("2 - Fire Pokemon");
-       System.out.println("3 - Water Pokemon");
+        System.out.println("Select from the following Pokemon types: ");
+        System.out.println("1 - Electric Pokemon ");
+        System.out.println("2 - Fire Pokemon");
+        System.out.println("3 - Water Pokemon");
 
     }
     /**
